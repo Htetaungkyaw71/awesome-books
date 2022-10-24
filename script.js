@@ -47,7 +47,6 @@ document.querySelector('form').onsubmit = (e) => {
   const { title, author } = e.target;
   if (title.value.length < 1 && author.value.length < 1) {
     error.innerHTML = 'input filed must not be empty';
-    error.style.color = 'red';
   } else {
     error.innerHTML = '';
     add({
