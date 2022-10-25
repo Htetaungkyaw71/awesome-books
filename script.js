@@ -29,7 +29,7 @@ class Book {
     this.awesomeBooks.innerHTML += `
     <li id="${book.id}">
     <p><span>${book.title}</span> by <span>${book.author}</span>.</p>
-    <button class="btn">remove</button>
+    <button class="btn">Remove</button>
 </li>
       
         `;
@@ -52,6 +52,9 @@ document.querySelector('form').onsubmit = (e) => {
   const { title, author } = e.target;
   if (title.value.length < 3 || author.value.length < 3) {
     error.innerHTML = 'input field should contain minimum of three characters!';
+    setTimeout(() => {
+      error.innerHTML = '';
+    }, 3000)
   } else {
     error.innerHTML = '';
     library.add({
