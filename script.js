@@ -118,4 +118,16 @@ list.forEach((item, index) => {
   };
 });
 
+const date = document.querySelector('.date');
+const d = new Date();
+const ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d);
+const mo = new Intl.DateTimeFormat('en', { month: 'long' }).format(d);
+const da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d);
+const hour = d.getHours();
+const minute = d.getMinutes();
+const second = d.getSeconds();
+const ampm = hour >= 12 ? 'pm' : 'am';
+
+date.innerHTML = `${mo} ${da}th ${ye}, ${hour}:${minute}:${second} ${ampm}`;
+
 library.books.forEach((book) => library.render(book));

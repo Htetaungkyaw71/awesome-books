@@ -5,6 +5,12 @@
   font-family: sans-serif;
 }
 
+.date {
+  color: white;
+  text-align: right;
+  padding: 20px;
+}
+
 #list {
   color: rgb(241, 43, 43);
 }
