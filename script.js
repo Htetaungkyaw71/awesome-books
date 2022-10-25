@@ -1,55 +1,60 @@
-let books = [];
-
 const awesomeBooks = document.getElementById('awesomeBooks');
 
-function updateLocalstorage() {
-  localStorage.setItem('bokLibrarie', JSON.stringify(books));
-}
+class Book {
+  constructor(awesomeBooks) {
+    this.awesomeBooks = awesomeBooks;
+    this.books = [];
+  }
 
-function remove(id) {
-  books = books.filter((book) => book.id !== id);
-  updateLocalstorage();
-}
+  updateLocalstorage() {
+    localStorage.setItem('bokLibrarie', JSON.stringify(this.books));
+  }
 
-function removeDom(element) {
-  element.querySelectorAll('.btn').forEach((btn) => {
-    btn.addEventListener('click', (e) => {
-      const parent = e.target.parentNode;
-      remove(parent.id);
-      parent.remove();
+  remove(id) {
+    this.books = this.books.filter((book) => book.id !== id);
+    this.updateLocalstorage();
+  }
+
+  removeDom(element) {
+    element.querySelectorAll('.btn').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const parent = e.target.parentNode;
+        this.remove(parent.id);
+        parent.remove();
+      });
     });
-  });
+  }
+
+  render(book) {
+    this.awesomeBooks.innerHTML += `
+    <li id="${book.id}">
+    <p><span>${book.title}</span> by <span>${book.author}</span>.</p>
+    <button class="btn">remove</button>
+</li>
+      
+        `;
+    this.removeDom(awesomeBooks);
+  }
+
+  add(book) {
+    this.render(book);
+    this.books.push(book);
+    this.removeDom(awesomeBooks);
+    this.updateLocalstorage();
+  }
 }
 
-function render(book) {
-  awesomeBooks.innerHTML += `
-      <li id="${book.id}">
-      <h3>${book.title}</h3>
-      <h4>${book.author}</h4>
-      <button class="btn">remove</button>
-      <hr>  
-      </li>
-    
-      `;
-  removeDom(awesomeBooks);
-}
-
-function add(book) {
-  render(book);
-  books.push(book);
-  removeDom(awesomeBooks);
-  updateLocalstorage();
-}
+const library = new Book(awesomeBooks);
 
 document.querySelector('form').onsubmit = (e) => {
   e.preventDefault();
   const error = document.getElementById('error');
   const { title, author } = e.target;
-  if (title.value.length < 1 && author.value.length < 1) {
-    error.innerHTML = 'input filed must not be empty';
+  if (title.value.length < 3 || author.value.length < 3) {
+    error.innerHTML = 'input field should contain minimum of three characters!';
   } else {
     error.innerHTML = '';
-    add({
+    library.add({
       id: Date.now().toString(),
       title: title.value,
       author: author.value,
@@ -60,9 +65,9 @@ document.querySelector('form').onsubmit = (e) => {
 };
 
 if (localStorage.getItem('bokLibrarie')) {
-  books = JSON.parse(localStorage.getItem('bokLibrarie'));
+  library.books = JSON.parse(localStorage.getItem('bokLibrarie'));
 } else {
   localStorage.setItem('bokLibrarie', JSON.stringify([]));
 }
 
-books.forEach((book) => render(book));
+library.books.forEach((book) => library.render(book));
