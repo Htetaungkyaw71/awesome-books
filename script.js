@@ -29,7 +29,7 @@ class Book {
     this.awesomeBooks.innerHTML += `
     <li id="${book.id}">
     <p><span>${book.title}</span> by <span>${book.author}</span>.</p>
-    <button class="btn">remove</button>
+    <button class="btn">Remove</button>
 </li>
       
         `;
@@ -52,6 +52,9 @@ document.querySelector('form').onsubmit = (e) => {
   const { title, author } = e.target;
   if (title.value.length < 3 || author.value.length < 3) {
     error.innerHTML = 'input field should contain minimum of three characters!';
+    setTimeout(() => {
+      error.innerHTML = '';
+    }, 3000);
   } else {
     error.innerHTML = '';
     library.add({
@@ -69,5 +72,62 @@ if (localStorage.getItem('bokLibrarie')) {
 } else {
   localStorage.setItem('bokLibrarie', JSON.stringify([]));
 }
+
+const list = [
+  {
+    linkId: 'list',
+    pageId: 'listpage',
+  },
+  {
+    linkId: 'add-new',
+    pageId: 'addpage',
+  },
+  {
+    linkId: 'contact-page',
+    pageId: 'contactpage',
+  },
+];
+
+list.forEach((item, index) => {
+  const link = document.getElementById(item.linkId);
+  const page = document.getElementById(item.pageId);
+
+  link.onclick = () => {
+    if (index === 1) {
+      link.style.color = 'rgb(241, 43, 43)';
+      link.previousElementSibling.style.color = '#d3d3d3';
+      link.nextElementSibling.style.color = '#d3d3d3';
+      page.classList.remove('hiden');
+      page.previousElementSibling.classList.add('hiden');
+      page.nextElementSibling.classList.add('hiden');
+    } else if (index === 0) {
+      link.style.color = 'rgb(241, 43, 43)';
+      link.nextElementSibling.style.color = '#d3d3d3';
+      link.nextElementSibling.nextElementSibling.style.color = '#d3d3d3';
+      page.classList.remove('hiden');
+      page.nextElementSibling.classList.add('hiden');
+      page.nextElementSibling.nextElementSibling.classList.add('hiden');
+    } else {
+      link.style.color = 'rgb(241, 43, 43)';
+      link.previousElementSibling.style.color = '#d3d3d3';
+      link.previousElementSibling.previousElementSibling.style.color = '#d3d3d3';
+      page.classList.remove('hiden');
+      page.previousElementSibling.classList.add('hiden');
+      page.previousElementSibling.previousElementSibling.classList.add('hiden');
+    }
+  };
+});
+
+const date = document.querySelector('.date');
+const d = new Date();
+const ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d);
+const mo = new Intl.DateTimeFormat('en', { month: 'long' }).format(d);
+const da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d);
+const hour = d.getHours();
+const minute = d.getMinutes();
+const second = d.getSeconds();
+const ampm = hour >= 12 ? 'pm' : 'am';
+
+date.innerHTML = `${mo} ${da}th ${ye}, ${hour}:${minute}:${second} ${ampm}`;
 
 library.books.forEach((book) => library.render(book));
